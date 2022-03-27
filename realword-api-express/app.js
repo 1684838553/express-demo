@@ -4,6 +4,7 @@ const router = require("./router/index");
 const morgan = require("morgan");
 const cors = require("cors");
 const errorHandle = require("./middleware/error-handle");
+require("./model/index");
 
 // 配置解析表单请求体：application/json
 app.use(express.json());
