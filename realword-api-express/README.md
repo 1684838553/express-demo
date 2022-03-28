@@ -68,3 +68,17 @@
     contro.register // 通过验证，执行具体的控制器处理
   );
   ```
+
+- [node-jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
+
+## node 内置对象
+
+- 密码加密
+
+  ```javascript
+  const crypto = require("crypto");
+
+  module.exports = (str) => {
+    return crypto.createHash("md5").update(str).digest("hex");
+  };
+  ```

@@ -5,7 +5,7 @@ const { User } = require("../model");
 const userValidator = require("../validator/user");
 
 // 用户登录
-router.post("/users/login", contro.login);
+router.post("/users/login", userValidator.login, contro.login);
 
 // 用户注册
 router.post(
