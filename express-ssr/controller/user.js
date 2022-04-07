@@ -12,8 +12,10 @@ exports.login = async (req, res, next) => {
       {
         userId: user._id,
       },
-      jwtSecret
-    );
+      jwtSecret, {
+      // 设置token的有效时间，不设置，默认永久有效
+      expiresIn: 60 * 60 * 24
+    });
     res.status(200).json({
       ...user,
       token,
@@ -47,7 +49,9 @@ exports.register = async (req, res, next) => {
 // 获取用户
 exports.getCurrentUser = async (req, res, next) => {
   try {
-    res.send("获取用户");
+    res.status(200).json({
+      user: req.user
+    })
   } catch (err) {
     next(err);
   }
