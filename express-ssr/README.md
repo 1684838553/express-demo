@@ -1,0 +1,84 @@
+## 项目目录
+
+```
+├─app.js
+├─package.json
+├─util  # 工具模块
+├─router  # 路由
+├─model  # 数据持久层
+├─middleware # 非路由中间件
+├─controller  # 用于解析用户的输入，处理后返回相应的结果
+├─config  # 配置文件
+|   └config.default.js
+```
+
+## MongoDB Compass
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/a1eb520f538e463d9b3e9bdebdecc5e4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAZHJ1bmvllrXlkqo=,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 第三方插件
+
+- [日志打印](https://www.npmjs.com/package/morgan)
+
+- [跨域](https://www.npmjs.com/package/cors)
+
+- [mongoose](http://www.mongoosejs.net/docs/api.html)
+
+- [表单校验](https://github.com/express-validator/express-validator)
+
+  [文档](https://express-validator.github.io/docs/validation-chain-api.html)
+
+  ```javascript
+  const { body, validationResult } = require("express-validator");
+
+  // 用户注册
+  router.post(
+    "/users",
+    [
+      // 配置验证规则
+      body("user.username").notEmpty().withMessage("用户名不能为空"),
+      body("user.email")
+        .notEmpty()
+        .withMessage("邮箱不能为空")
+        .isEmail()
+        .withMessage("邮箱格式不正确")
+        // 前面规则校验失败，停止校验后面规则
+        .bail()
+        // 自定义校验
+        .custom(async (email) => {
+          const user = await User.findOne({ email });
+          if (user) {
+            return Promise.reject("邮箱已存在");
+          }
+        }),
+      body("user.password").notEmpty().withMessage("密码不能为空"),
+    ],
+    (req, res, next) => {
+      // 判断验证结果
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+        });
+      }
+
+      next();
+    },
+    contro.register // 通过验证，执行具体的控制器处理
+  );
+  ```
+
+- [node-jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
+
+## node 内置对象
+
+- 密码加密
+
+  ```javascript
+  const crypto = require("crypto");
+
+  module.exports = (str) => {
+    return crypto.createHash("md5").update(str).digest("hex");
+  };
+  ```
