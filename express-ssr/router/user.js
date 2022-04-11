@@ -3,21 +3,23 @@ const router = express.Router();
 const contro = require("../controller/user");
 const { User } = require("../model");
 const userValidator = require("../validator/user");
+const auth = require('../middleware/auth')
+const noAuth = require('../middleware/no-auth')
 
-// 用户登录
-router.post("/users/login", userValidator.login, contro.login);
+router.get('/login', noAuth, contro.showLogin)
 
-// 用户注册
-router.post(
-  "/users",
-  userValidator.register,
-  contro.register // 通过验证，执行具体的控制器处理
-);
+router.post('/login', noAuth, userValidator.login, contro.login)
 
-// 获取用户
-router.get("/user", contro.getCurrentUser);
+router.get('/register', noAuth, contro.showRegister)
 
-// 更新注册
-router.put("/user", contro.updateCurrentUser);
+router.get('/logout', contro.logout)
+
+router.post('/register', userValidator.register, contro.register)
+
+router.get('/settings', auth, contro.showSettings)
+
+router.get('/profile/:username', contro.showProfile)
+
+router.get('/profile/:username/favorites', contro.showProfile)
 
 module.exports = router;
