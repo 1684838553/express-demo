@@ -1,0 +1,105 @@
+{{extend './layout/layout.art'}}
+
+{{block 'body'}}
+
+<div class="auth-page" id="login">
+    <div class="container page">
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">Sign up</h1>
+                <p class="text-xs-center">
+                    <a href="">Have an account?</a>
+                </p>
+
+                <ul class="error-messages">
+                    <li v-for="(error , index) in errors" :key="index">{% error.msg %}</li>
+                </ul>
+                
+                <!-- 
+                    表单提交：
+                    
+                    1. 同步提交 （早期的web常用的方式）
+                        <form action="register" method="POST">
+                        提交到/register
+
+                        数据格式：application/x-www-form-urlencoded
+
+                        需要表单元素有name字段
+
+                    2. 异步提交 （随着ajax的诞生大量使用）
+
+                        jQuery + 客户端模板引擎
+
+                        vue.js 当作一个库来使用
+                
+                 -->
+
+                <form @submit.prevent="handleSubmit">
+                    {{if !isLogin}}
+                        <fieldset class="form-group">
+                            <input v-model="user.username" name="username" class="form-control form-control-lg" type="text" placeholder="Your Name">
+                        </fieldset>
+                    {{/if}}
+                    
+                    <fieldset class="form-group">
+                        <input v-model="user.email" name="email" class="form-control form-control-lg" type="text" placeholder="Email">
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <input v-model="user.password" name="password" class="form-control form-control-lg" type="password" placeholder="Password">
+                    </fieldset>
+                    <button class="btn btn-lg btn-primary pull-xs-right">
+                       {{isLogin ? 'Sign in' : 'Sign up'}}
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{/block}}
+
+{{block 'script'}}
+<script>
+;(()=>{
+    const app = new Vue({
+        el:'#login',
+        data:{
+            user:{
+                username:'',
+                email:'',
+                password:''
+            },
+            errors:[]
+        },
+        methods:{
+            async handleSubmit(){
+                // 客户端表单验证
+                console.log('submit')
+                if(!this.user.email){
+                    //console.log(this.$message)
+                    //this.$message.error('邮箱不能为空');
+                }
+                // 验证通过，提交表单
+                try{
+                    const url = window.location.pathname === '/login' ? '/login' : '/register'
+                    const { data } = await axios.post(url,{
+                        user:this.user
+                    })
+
+                    // 清除错误信息
+                   this.errors = []
+
+                   // 跳转到首页
+                   window.location.href = '/'
+                }catch(err){
+                    if(err.response.status === 400){
+                        this.errors = err.response.data.errors
+                    }
+                }
+            }
+        }
+    })
+})()
+</script>
+{{/block}}
