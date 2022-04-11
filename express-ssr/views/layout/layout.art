@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Conduit</title>
+    <link href="/node_modules/ionicons/css/ionicons.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Titillium+Web:700|Source+Serif+Pro:400,700|Merriweather+Sans:400,700|Source+Sans+Pro:400,300,600,700,300italic,400italic,600italic,700italic"
+          rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//demo.productionready.io/main.css">
+    <!-- 填充页面自己的css或js -->
+    {{block 'head'}}{{/block}}
+</head>
+<body>
+<!-- 头部 -->
+{{include './head.art'}}
+<!-- 中间内容 -->
+{{block 'body'}}
+
+{{/block}}
+
+<!-- 底部 -->
+{{include './footer.art'}}
+
+
+<script src="/node_modules/vue/dist/vue.js"></script>
+<script>
+    // 全局混入，会影响所有的Vue实例
+    // {{}} 语法与art-template 渲染语法有冲突，修改vue的渲染语法，使用v-text指令也能渲染vue的数据
+    Vue.mixin({
+        delimiters:['{%','%}'],
+    })
+</script>
+<script src="/node_modules/axios/dist/axios.js"></script>
+
+
+<!-- 填充页面自己的js -->
+{{block 'script'}}{{/block}}
+</body>
+</html>
